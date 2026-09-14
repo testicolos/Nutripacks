@@ -31,6 +31,16 @@ export async function POST(request:NextRequest){
       if(error) return NextResponse.json({error:friendlyStaffError(error.message)},{status:403});
       return NextResponse.json(data);
     }
+    if(body.action==='deletePackage'){
+      const {data,error}=await supabase.rpc('np_admin_delete_package',{p_token:token,p_package_id:body.packageId});
+      if(error) return NextResponse.json({error:friendlyStaffError(error.message)},{status:403});
+      return NextResponse.json(data);
+    }
+    if(body.action==='deleteMenuItem'){
+      const {data,error}=await supabase.rpc('np_admin_delete_menu_item',{p_token:token,p_menu_item_id:body.menuItemId});
+      if(error) return NextResponse.json({error:friendlyStaffError(error.message)},{status:403});
+      return NextResponse.json(data);
+    }
     return NextResponse.json({error:'Unknown catalog action.'},{status:400});
   }catch{return NextResponse.json({error:'Unable to update catalog.'},{status:400});}
 }
