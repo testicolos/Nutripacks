@@ -6,11 +6,16 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const fullName = String(body.fullName || '').trim();
     const email = String(body.email || '').trim().toLowerCase();
-    const phone = String(body.phone || '').trim();
+    const rawPhone = String(body.phone || '').trim();
     const password = String(body.password || '');
+    const digits = rawPhone.replace(/\D/g, '');
+    const phone = rawPhone ? (rawPhone.startsWith('+') ? rawPhone : `+974 ${rawPhone}`) : '';
 
     if (fullName.length < 2 || !email || password.length < 8) {
       return NextResponse.json({ error: 'Please complete all required fields.' }, { status: 400 });
+    }
+    if (rawPhone && digits.length !== 8) {
+      return NextResponse.json({ error: 'Enter an 8-digit Qatar mobile number.' }, { status: 400 });
     }
 
     const supabase = backendClient();
