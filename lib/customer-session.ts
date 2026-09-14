@@ -21,6 +21,7 @@ export function friendlyAuthError(message?: string) {
   if (value.includes('order_not_found')) return 'This order could not be found.';
   if (value.includes('only_active_can_pause')) return 'Only an active plan can be paused.';
   if (value.includes('only_paused_can_resume')) return 'Only a paused plan can be resumed.';
+  if (value.includes('delivery_skip_cutoff_passed')) return 'Delivery changes close 24 hours before the scheduled delivery time.';
   if (value.includes('past_delivery_not_editable')) return 'Past delivery dates cannot be changed.';
   if (value.includes('order_not_editable')) return 'This order can no longer be edited.';
   if (value.includes('incorrect_delivery_day_count')) return 'Choose meals for every required delivery day in the week.';
