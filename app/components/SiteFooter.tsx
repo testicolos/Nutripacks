@@ -1,22 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { signOutCustomer, useCustomerAuth } from './useCustomerAuth';
 
 export default function SiteFooter() {
-  const [authState, setAuthState] = useState<'loading' | 'in' | 'out'>('loading');
-
-  useEffect(() => {
-    let mounted = true;
-    fetch('/api/customer/me', { cache: 'no-store' })
-      .then(response => { if (mounted) setAuthState(response.ok ? 'in' : 'out'); })
-      .catch(() => { if (mounted) setAuthState('out'); });
-    return () => { mounted = false; };
-  }, []);
+  const authState = useCustomerAuth();
 
   async function signOut() {
-    await fetch('/api/customer/logout', { method: 'POST' });
-    setAuthState('out');
+    await signOutCustomer();
     window.location.href = '/';
   }
 
@@ -43,19 +34,17 @@ export default function SiteFooter() {
           <Link href="/#faq">FAQ</Link>
           <a href="mailto:support@nutripacks.qa">support@nutripacks.qa</a>
           <span>Doha, Qatar</span>
-          <Link className="footerStaffLink" href="/staff/login">Staff portal</Link>
+          <Link href="/staff/login">Staff portal</Link>
         </div>
 
         <div>
           <h4>Account</h4>
-          {authState === 'loading' && <span className="footerAccountState">Checking account…</span>}
           {authState === 'out' && <>
             <Link href="/login">Sign in</Link>
             <Link href="/signup">Create account</Link>
           </>}
           {authState === 'in' && <>
             <Link href="/account">My account</Link>
-            <Link href="/account">Manage plan & deliveries</Link>
             <button className="footerLinkButton" type="button" onClick={signOut}>Sign out</button>
           </>}
         </div>
@@ -65,6 +54,21 @@ export default function SiteFooter() {
         <span>© 2026 Nutripacks. All rights reserved.</span>
         <span>Built for Qatar • QIIB card gateway integration pending</span>
       </div>
+
+      <style jsx>{`
+        .footerLinkButton {
+          width: fit-content;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          color: #b5cabf;
+          font: inherit;
+          text-align: left;
+          cursor: pointer;
+          transition: color .18s ease;
+        }
+        .footerLinkButton:hover { color: white; }
+      `}</style>
     </footer>
   );
 }
