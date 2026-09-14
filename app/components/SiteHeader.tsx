@@ -1,23 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { signOutCustomer, useCustomerAuth } from './useCustomerAuth';
 
 export default function SiteHeader() {
-  const [authState,setAuthState]=useState<'loading'|'in'|'out'>('loading');
+  const authState = useCustomerAuth();
 
-  useEffect(()=>{
-    let mounted=true;
-    fetch('/api/customer/me',{cache:'no-store'})
-      .then(response=>{if(mounted)setAuthState(response.ok?'in':'out');})
-      .catch(()=>{if(mounted)setAuthState('out');});
-    return()=>{mounted=false;};
-  },[]);
-
-  async function signOut(){
-    await fetch('/api/customer/logout',{method:'POST'});
-    setAuthState('out');
-    window.location.href='/';
+  async function signOut() {
+    await signOutCustomer();
+    window.location.href = '/';
   }
 
   return (
@@ -38,11 +29,11 @@ export default function SiteHeader() {
           <Link href="/#faq">FAQ</Link>
         </nav>
         <div className="headerActions">
-          {authState==='in'&&<>
+          {authState === 'in' && <>
             <button className="textLink" type="button" onClick={signOut} style={{background:'transparent',border:0,padding:0,cursor:'pointer'}}>Sign out</button>
             <Link className="button buttonSecondary buttonSmall" href="/account">My account</Link>
           </>}
-          {authState==='out'&&<>
+          {authState === 'out' && <>
             <Link className="textLink" href="/login">Sign in</Link>
             <Link className="button buttonPrimary buttonSmall" href="/signup">Get started</Link>
           </>}
