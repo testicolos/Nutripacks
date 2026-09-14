@@ -21,7 +21,10 @@ export function friendlyAuthError(message?: string) {
   if (value.includes('order_not_found')) return 'This order could not be found.';
   if (value.includes('only_active_can_pause')) return 'Only an active plan can be paused.';
   if (value.includes('only_paused_can_resume')) return 'Only a paused plan can be resumed.';
-  if (value.includes('delivery_skip_cutoff_passed')) return 'Delivery changes close 24 hours before the scheduled delivery time.';
+  if (value.includes('delivery_skip_day_locked')) return 'Today and tomorrow are locked. Delivery skipping is available from the day after tomorrow onward.';
+  if (value.includes('delivery_date_not_found')) return 'This delivery date is not part of your current meal schedule.';
+  if (value.includes('meal_change_limit_reached')) return 'Your one meal-selection change for this plan cycle has already been used. You can change meals again after renewal.';
+  if (value.includes('meal_change_day_locked')) return 'Meal changes cannot affect today or tomorrow. Changes are allowed from the day after tomorrow onward.';
   if (value.includes('past_delivery_not_editable')) return 'Past delivery dates cannot be changed.';
   if (value.includes('order_not_editable')) return 'This order can no longer be edited.';
   if (value.includes('incorrect_delivery_day_count')) return 'Choose meals for every required delivery day in the week.';
