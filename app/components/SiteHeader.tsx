@@ -39,7 +39,7 @@ export default function SiteHeader() {
         </nav>
         <div className="headerActions">
           {authState==='in'&&<>
-            <button className="textLink" type="button" onClick={signOut}>Sign out</button>
+            <button className="textLink" type="button" onClick={signOut} style={{background:'transparent',border:0,padding:0,cursor:'pointer'}}>Sign out</button>
             <Link className="button buttonSecondary buttonSmall" href="/account">My account</Link>
           </>}
           {authState==='out'&&<>
