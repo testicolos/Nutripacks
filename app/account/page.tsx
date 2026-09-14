@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 
@@ -9,10 +9,10 @@ type Customer={id:string;full_name:string;email:string;phone?:string|null;goal?:
 type Order={id:string;order_number:string;status:string;payment_status:string;total_qar:number|string;start_date?:string|null;package_id:string;package_name:string;package_slug:string;duration_days:number;meals_per_day:number;selection_count?:number;next_delivery?:string|null};
 
 export default function AccountPage(){
- const router=useRouter(); const search=useSearchParams();
- const [customer,setCustomer]=useState<Customer|null>(null); const [orders,setOrders]=useState<Order[]>([]); const [loading,setLoading]=useState(true); const [saving,setSaving]=useState(false); const [error,setError]=useState(''); const [message,setMessage]=useState(search.get('meals')==='saved'?'Meal schedule saved. Kitchen and sales views are now updated.':'');
+ const router=useRouter();
+ const [customer,setCustomer]=useState<Customer|null>(null); const [orders,setOrders]=useState<Order[]>([]); const [loading,setLoading]=useState(true); const [saving,setSaving]=useState(false); const [error,setError]=useState(''); const [message,setMessage]=useState('');
  async function load(){setLoading(true);const response=await fetch('/api/customer/me',{cache:'no-store'});if(!response.ok){setCustomer(null);setLoading(false);return;}const data=await response.json();setCustomer(data.customer);setOrders(data.orders||[]);setLoading(false);}
- useEffect(()=>{load();},[]);
+ useEffect(()=>{if(new URLSearchParams(window.location.search).get('meals')==='saved')setMessage('Meal schedule saved. Kitchen and sales views are now updated.');load();},[]);
  const activeOrder=useMemo(()=>orders.find(o=>['active','awaiting_payment','paused'].includes(o.status))||orders[0],[orders]);
  async function saveProfile(event:FormEvent<HTMLFormElement>){event.preventDefault();setSaving(true);setError('');setMessage('');const form=new FormData(event.currentTarget);const response=await fetch('/api/customer/profile',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({fullName:form.get('fullName'),phone:form.get('phone'),goal:form.get('goal'),caloriePreference:form.get('caloriePreference'),dietaryPreferences:String(form.get('dietaryPreferences')||'').split(',').map(v=>v.trim()).filter(Boolean),allergies:String(form.get('allergies')||'').split(',').map(v=>v.trim()).filter(Boolean),deliveryAddress:form.get('deliveryAddress'),deliveryZone:form.get('deliveryZone'),deliverySlot:form.get('deliverySlot')})});const result=await response.json();setSaving(false);if(!response.ok){setError(result.error||'Unable to save profile.');return;}setCustomer(result.customer);setOrders(result.orders||[]);setMessage('Profile updated.');}
  async function signOut(){await fetch('/api/customer/logout',{method:'POST'});router.push('/login');router.refresh();}
