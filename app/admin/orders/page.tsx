@@ -9,7 +9,13 @@ type Order={
   package_name:string;package_slug:string;duration_days:number;meals_per_day:number;selection_count:number;next_delivery?:string|null;skipped_deliveries:number;
 };
 
-const actions=[['activate','Activate'],['pause','Pause'],['resume','Resume'],['complete','Complete'],['cancel','Cancel']] as const;
+type OrderAction='pause'|'resume'|'complete'|'cancel';
+function availableActions(order:Order):Array<[OrderAction,string]>{
+  if(order.status==='active') return [['pause','Pause'],['complete','Complete'],['cancel','Cancel']];
+  if(order.status==='paused') return [['resume','Resume'],['complete','Complete'],['cancel','Cancel']];
+  if(order.status==='draft') return [['cancel','Cancel draft']];
+  return [];
+}
 
 export default function AdminOrdersPage(){
   const router=useRouter(); const [orders,setOrders]=useState<Order[]>([]); const [loading,setLoading]=useState(true); const [error,setError]=useState(''); const [message,setMessage]=useState(''); const [statusFilter,setStatusFilter]=useState('all'); const [busy,setBusy]=useState('');
@@ -18,7 +24,7 @@ export default function AdminOrdersPage(){
   useEffect(()=>{load();},[]);
   const visible=useMemo(()=>orders.filter(o=>statusFilter==='all'||o.status===statusFilter),[orders,statusFilter]);
 
-  async function transition(order:Order,action:string){
+  async function transition(order:Order,action:OrderAction){
     if((action==='cancel'||action==='complete')&&!window.confirm(`Confirm ${action} for ${order.order_number}?`))return;
     setBusy(order.id+action);setError('');setMessage('');
     const response=await fetch('/api/admin/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:order.id,action})});
@@ -30,12 +36,12 @@ export default function AdminOrdersPage(){
   return <main className="staffPortal">
     <div className="staffTopbar"><div><strong>Nutripacks Admin</strong><span className="rolePill role-admin">admin</span></div><div><a href="/admin">Catalog</a><a href="/staff">Operations</a><a href="/">Customer site</a></div></div>
     <div className="staffContent">
-      <section className="staffHero"><div><span className="eyebrow">Order control</span><h1>Subscriptions & delivery lifecycle.</h1><p>Testing mode is active. Customer orders start immediately after a complete meal schedule is saved, with no payment step.</p></div></section>
-      <div className="testingBanner"><strong>Testing mode</strong><span>Payment is disabled. Use lifecycle controls only: activate, pause, resume, complete or cancel.</span></div>
+      <section className="staffHero"><div><span className="eyebrow">Order control</span><h1>Subscriptions & delivery lifecycle.</h1><p>Testing mode is active. A new order remains a draft until its complete meal schedule passes backend validation, then it activates automatically.</p></div></section>
+      <div className="testingBanner"><strong>Testing mode</strong><span>Payment is disabled. Lifecycle controls are limited to valid state changes: pause, resume, complete or cancel.</span></div>
       {error&&<div className="selectionError">{error}</div>}{message&&<div className="adminSuccess">{message}</div>}
       <section className="staffStats"><div><span>Total orders</span><strong>{orders.length}</strong></div><div><span>Active</span><strong>{orders.filter(o=>o.status==='active').length}</strong></div><div><span>Paused</span><strong>{orders.filter(o=>o.status==='paused').length}</strong></div><div><span>Scheduled meal units</span><strong>{orders.reduce((s,o)=>s+Number(o.selection_count||0),0)}</strong></div></section>
-      <section className="staffPanel"><div className="panelHeader"><div><span className="eyebrow">Orders</span><h2>Customer subscriptions</h2></div><select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}><option value="all">All statuses</option><option value="active">Active</option><option value="paused">Paused</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
-        <div className="staffTableWrap"><table className="table staffTable"><thead><tr><th>Order</th><th>Customer</th><th>Package</th><th>Schedule</th><th>Status</th><th>Actions</th></tr></thead><tbody>{visible.map(order=><tr key={order.id}><td><strong>{order.order_number}</strong><small>{new Date(order.created_at).toLocaleDateString('en-QA')}</small></td><td><strong>{order.full_name}</strong><small>{order.customer_username?`@${order.customer_username} • `:''}{order.phone||order.email}</small></td><td><strong>{order.package_name}</strong><small>QAR {Number(order.total_qar).toLocaleString()} • {order.selection_count||0} meal units</small></td><td><strong>{order.next_delivery||'No future selection'}</strong><small>{order.delivery_slot||'No slot'} • {order.skipped_deliveries||0} skipped</small></td><td><span className={`paymentStatus ${order.status}`}>{order.status.replace('_',' ')}</span></td><td><div className="orderActionGroup">{actions.map(([action,label])=><button key={action} className="button buttonSecondary buttonSmall" disabled={busy===order.id+action||(action==='pause'&&order.status!=='active')||(action==='resume'&&order.status!=='paused')} onClick={()=>transition(order,action)}>{busy===order.id+action?'…':label}</button>)}</div></td></tr>)}</tbody></table></div>
+      <section className="staffPanel"><div className="panelHeader"><div><span className="eyebrow">Orders</span><h2>Customer subscriptions</h2></div><select value={statusFilter} onChange={e=>setStatusFilter(e.target.value)}><option value="all">All statuses</option><option value="draft">Draft</option><option value="active">Active</option><option value="paused">Paused</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option></select></div>
+        <div className="staffTableWrap"><table className="table staffTable"><thead><tr><th>Order</th><th>Customer</th><th>Package</th><th>Schedule</th><th>Status</th><th>Actions</th></tr></thead><tbody>{visible.map(order=><tr key={order.id}><td><strong>{order.order_number}</strong><small>{new Date(order.created_at).toLocaleDateString('en-QA')}</small></td><td><strong>{order.full_name}</strong><small>{order.customer_username?`@${order.customer_username} • `:''}{order.phone||order.email}</small></td><td><strong>{order.package_name}</strong><small>QAR {Number(order.total_qar).toLocaleString()} • {order.selection_count||0} meal units</small></td><td><strong>{order.next_delivery||'No future selection'}</strong><small>{order.delivery_slot||'No slot'} • {order.skipped_deliveries||0} skipped</small></td><td><span className={`paymentStatus ${order.status}`}>{order.status.replace('_',' ')}</span></td><td><div className="orderActionGroup">{availableActions(order).length===0?<span className="formNote">No actions</span>:availableActions(order).map(([action,label])=><button key={action} className="button buttonSecondary buttonSmall" disabled={busy===order.id+action} onClick={()=>transition(order,action)}>{busy===order.id+action?'…':label}</button>)}</div></td></tr>)}</tbody></table></div>
       </section>
     </div>
   </main>;
