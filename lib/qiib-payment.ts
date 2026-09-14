@@ -10,8 +10,8 @@ export type QiibGatewayStatus = {
 
 export function getQiibGatewayStatus(): QiibGatewayStatus {
   const merchantIdPresent = Boolean(process.env.QIIB_MERCHANT_ID);
-  const apiEndpointPresent = Boolean(process.env.QIIB_API_ENDPOINT);
-  const callbackSecretPresent = Boolean(process.env.QIIB_CALLBACK_SECRET);
+  const apiEndpointPresent = Boolean(process.env.QIIB_API_BASE_URL);
+  const callbackSecretPresent = Boolean(process.env.QIIB_WEBHOOK_SECRET);
   const configured = merchantIdPresent && apiEndpointPresent && callbackSecretPresent;
   const requested = (process.env.QIIB_MODE || '').toLowerCase();
   const mode: QiibGatewayStatus['mode'] = configured ? (requested === 'production' ? 'production' : 'sandbox') : 'disabled';
@@ -24,6 +24,6 @@ export function assertQiibConfigured() {
   return status;
 }
 
-// The bank-specific request signing and hosted-card-session call will be added
-// only after QIIB provides the official merchant integration specification.
-// Nutripacks must never collect or store raw PAN/CVV values itself.
+// Bank-specific request signing and hosted-card-session calls are intentionally
+// not guessed. They will be added after QIIB supplies the official merchant API
+// specification. Nutripacks must never collect or store raw PAN/CVV values.
