@@ -19,7 +19,8 @@ export default function SiteHeader() {
           <Link href="/#faq">FAQ</Link>
         </nav>
         <div className="headerActions">
-          <Link className="textLink" href="/signup">Sign in</Link>
+          <Link className="textLink" href="/login">Sign in</Link>
+          <Link className="button buttonSecondary buttonSmall" href="/account">My account</Link>
           <Link className="button buttonPrimary buttonSmall" href="/signup">Get started</Link>
         </div>
       </header>
