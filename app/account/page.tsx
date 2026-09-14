@@ -1,102 +1,27 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import SiteHeader from '../components/SiteHeader';
 import SiteFooter from '../components/SiteFooter';
 
-type Customer = {
-  id: string; full_name: string; email: string; phone?: string | null; goal?: string | null;
-  calorie_preference?: number | null; dietary_preferences?: string[]; allergies?: string[];
-  delivery_address?: string | null; delivery_zone?: string | null; delivery_slot?: string | null;
-};
-type Order = {
-  id: string; order_number: string; status: string; payment_status: string; total_qar: number;
-  start_date?: string | null; package_name: string; package_slug: string; duration_days: number; meals_per_day: number;
-};
+type Customer={id:string;full_name:string;email:string;phone?:string|null;goal?:string|null;calorie_preference?:number|null;dietary_preferences?:string[];allergies?:string[];delivery_address?:string|null;delivery_zone?:string|null;delivery_slot?:string|null};
+type Order={id:string;order_number:string;status:string;payment_status:string;total_qar:number|string;start_date?:string|null;package_id:string;package_name:string;package_slug:string;duration_days:number;meals_per_day:number;selection_count?:number;next_delivery?:string|null};
 
-export default function AccountPage() {
-  const router = useRouter();
-  const [customer, setCustomer] = useState<Customer | null>(null);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-  const [message, setMessage] = useState('');
-
-  async function load() {
-    setLoading(true);
-    const response = await fetch('/api/customer/me', { cache: 'no-store' });
-    if (!response.ok) { setCustomer(null); setLoading(false); return; }
-    const data = await response.json();
-    setCustomer(data.customer); setOrders(data.orders || []); setLoading(false);
-  }
-
-  useEffect(() => { load(); }, []);
-  const activeOrder = useMemo(() => orders.find((o) => ['active', 'awaiting_payment', 'paused'].includes(o.status)) || orders[0], [orders]);
-
-  async function saveProfile(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); setSaving(true); setError(''); setMessage('');
-    const form = new FormData(event.currentTarget);
-    const response = await fetch('/api/customer/profile', {
-      method: 'PUT', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        fullName: form.get('fullName'), phone: form.get('phone'), goal: form.get('goal'),
-        caloriePreference: form.get('caloriePreference'),
-        dietaryPreferences: String(form.get('dietaryPreferences') || '').split(',').map(v => v.trim()).filter(Boolean),
-        allergies: String(form.get('allergies') || '').split(',').map(v => v.trim()).filter(Boolean),
-        deliveryAddress: form.get('deliveryAddress'), deliveryZone: form.get('deliveryZone'), deliverySlot: form.get('deliverySlot')
-      })
-    });
-    const result = await response.json(); setSaving(false);
-    if (!response.ok) return setError(result.error || 'Unable to save profile.');
-    setCustomer(result.customer); setOrders(result.orders || []); setMessage('Profile updated.');
-  }
-
-  async function signOut() {
-    await fetch('/api/customer/logout', { method: 'POST' });
-    router.push('/login'); router.refresh();
-  }
-
-  if (loading) return <main className="siteShell"><SiteHeader /><section className="contentWidth sectionBlock"><div className="card"><h2>Loading your account…</h2></div></section><SiteFooter /></main>;
-
-  if (!customer) return <main className="siteShell"><SiteHeader /><section className="contentWidth sectionBlock"><div className="formCard"><span className="eyebrow">Customer account</span><h1 style={{ fontSize: 44 }}>Sign in to continue.</h1><p className="lead">Your account data is protected behind a secure customer session.</p><div style={{ display: 'flex', gap: 12, marginTop: 24 }}><a className="button buttonPrimary" href="/login">Sign in</a><a className="button buttonSecondary" href="/signup">Create account</a></div></div></section><SiteFooter /></main>;
-
-  return (
-    <main className="siteShell">
-      <SiteHeader />
-      <section className="contentWidth accountHero">
-        <div><span className="eyebrow">Customer account</span><h1>Welcome, {customer.full_name.split(' ')[0]}.</h1><p className="lead">Manage your profile, delivery details and Nutripacks orders from one place.</p><button className="button buttonSecondary buttonSmall" onClick={signOut}>Sign out</button></div>
-        <div className="accountPlanCard"><span>{activeOrder ? 'Current package' : 'No active package yet'}</span><strong>{activeOrder?.package_name || 'Choose your plan'}</strong><small>{activeOrder ? `${activeOrder.duration_days}-day plan • QAR ${Number(activeOrder.total_qar).toLocaleString()}` : 'Browse a package when you are ready.'}</small>{activeOrder && <><div className="progressTrack"><span style={{ width: activeOrder.status === 'active' ? '35%' : '8%' }} /></div><small>Status: {activeOrder.status.replace('_', ' ')} • Payment: {activeOrder.payment_status}</small></>}</div>
-      </section>
-
-      <section className="contentWidth sectionBlock">
-        <div className="dashboardGrid">
-          <div className="dashboardPanel widePanel">
-            <div className="panelHeader"><div><span className="eyebrow">Your details</span><h2>Profile & delivery</h2></div><span className="secureBadge">Saved securely</span></div>
-            <form className="formGrid" onSubmit={saveProfile}>
-              <label className="field"><span>Full name</span><input name="fullName" defaultValue={customer.full_name} required /></label>
-              <label className="field"><span>Mobile</span><input name="phone" defaultValue={customer.phone || ''} /></label>
-              <label className="field"><span>Goal</span><select name="goal" defaultValue={customer.goal || 'balanced'}><option value="balanced">Balanced nutrition</option><option value="fat_loss">Fat loss</option><option value="performance">Performance</option><option value="muscle_gain">Muscle gain</option></select></label>
-              <label className="field"><span>Calories</span><input name="caloriePreference" type="number" defaultValue={customer.calorie_preference || ''} placeholder="e.g. 2000" /></label>
-              <label className="field full"><span>Dietary preferences</span><input name="dietaryPreferences" defaultValue={(customer.dietary_preferences || []).join(', ')} placeholder="comma separated" /></label>
-              <label className="field full"><span>Allergies</span><input name="allergies" defaultValue={(customer.allergies || []).join(', ')} placeholder="comma separated" /></label>
-              <label className="field full"><span>Delivery address</span><input name="deliveryAddress" defaultValue={customer.delivery_address || ''} /></label>
-              <label className="field"><span>Zone</span><input name="deliveryZone" defaultValue={customer.delivery_zone || ''} /></label>
-              <label className="field"><span>Preferred slot</span><select name="deliverySlot" defaultValue={customer.delivery_slot || 'evening'}><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option></select></label>
-              {error && <p className="formNote full" style={{ color: '#a33' }}>{error}</p>}
-              {message && <p className="formNote full" style={{ color: 'var(--green)' }}>{message}</p>}
-              <button className="button buttonPrimary" type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save profile'}</button>
-            </form>
-          </div>
-
-          <aside className="dashboardPanel">
-            <span className="eyebrow">Orders</span><h2 style={{ marginTop: 8 }}>Your plans</h2>
-            {orders.length === 0 ? <><p>No package has been ordered yet.</p><a className="button buttonPrimary buttonSmall" href="/#plans">Browse plans</a></> : <div className="quickActions">{orders.map((order) => <div key={order.id} style={{ padding: '14px 0', borderBottom: '1px solid var(--line)' }}><strong>{order.package_name}</strong><div style={{ color: 'var(--muted)', fontSize: 13, marginTop: 4 }}>{order.order_number}</div><div style={{ marginTop: 6 }}>QAR {Number(order.total_qar).toLocaleString()} • {order.payment_status}</div></div>)}</div>}
-          </aside>
-        </div>
-      </section>
-      <SiteFooter />
-    </main>
-  );
+export default function AccountPage(){
+ const router=useRouter(); const search=useSearchParams();
+ const [customer,setCustomer]=useState<Customer|null>(null); const [orders,setOrders]=useState<Order[]>([]); const [loading,setLoading]=useState(true); const [saving,setSaving]=useState(false); const [error,setError]=useState(''); const [message,setMessage]=useState(search.get('meals')==='saved'?'Meal schedule saved. Kitchen and sales views are now updated.':'');
+ async function load(){setLoading(true);const response=await fetch('/api/customer/me',{cache:'no-store'});if(!response.ok){setCustomer(null);setLoading(false);return;}const data=await response.json();setCustomer(data.customer);setOrders(data.orders||[]);setLoading(false);}
+ useEffect(()=>{load();},[]);
+ const activeOrder=useMemo(()=>orders.find(o=>['active','awaiting_payment','paused'].includes(o.status))||orders[0],[orders]);
+ async function saveProfile(event:FormEvent<HTMLFormElement>){event.preventDefault();setSaving(true);setError('');setMessage('');const form=new FormData(event.currentTarget);const response=await fetch('/api/customer/profile',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({fullName:form.get('fullName'),phone:form.get('phone'),goal:form.get('goal'),caloriePreference:form.get('caloriePreference'),dietaryPreferences:String(form.get('dietaryPreferences')||'').split(',').map(v=>v.trim()).filter(Boolean),allergies:String(form.get('allergies')||'').split(',').map(v=>v.trim()).filter(Boolean),deliveryAddress:form.get('deliveryAddress'),deliveryZone:form.get('deliveryZone'),deliverySlot:form.get('deliverySlot')})});const result=await response.json();setSaving(false);if(!response.ok){setError(result.error||'Unable to save profile.');return;}setCustomer(result.customer);setOrders(result.orders||[]);setMessage('Profile updated.');}
+ async function signOut(){await fetch('/api/customer/logout',{method:'POST'});router.push('/login');router.refresh();}
+ if(loading)return <main className="siteShell"><SiteHeader/><section className="contentWidth sectionBlock"><div className="card"><h2>Loading your account…</h2></div></section><SiteFooter/></main>;
+ if(!customer)return <main className="siteShell"><SiteHeader/><section className="contentWidth sectionBlock"><div className="formCard"><span className="eyebrow">Customer account</span><h1 style={{fontSize:44}}>Sign in to continue.</h1><p className="lead">Your package, meal selections and delivery profile are protected behind your customer session.</p><div className="heroActions"><a className="button buttonPrimary" href="/login">Sign in</a><a className="button buttonSecondary" href="/signup">Create account</a></div></div></section><SiteFooter/></main>;
+ return <main className="siteShell"><SiteHeader/>
+  <section className="contentWidth accountHero"><div><span className="eyebrow">Customer account</span><h1>Welcome, {customer.full_name.split(' ')[0]}.</h1><p className="lead">Manage your profile, package and live meal schedule.</p><button className="button buttonSecondary buttonSmall" onClick={signOut}>Sign out</button></div><div className="accountPlanCard"><span>{activeOrder?'Current package':'No active package yet'}</span><strong>{activeOrder?.package_name||'Choose your plan'}</strong><small>{activeOrder?`${activeOrder.duration_days}-day plan • QAR ${Number(activeOrder.total_qar).toLocaleString()}`:'Browse a package when you are ready.'}</small>{activeOrder&&<><div className="progressTrack"><span style={{width:activeOrder.selection_count?'35%':'8%'}}/></div><small>{activeOrder.selection_count||0} meal units selected • Payment: {activeOrder.payment_status}</small>{activeOrder.next_delivery&&<small>Next selected delivery: {activeOrder.next_delivery}</small>}<a className="button buttonLight buttonSmall" href={`/select?order=${encodeURIComponent(activeOrder.id)}`}>{activeOrder.selection_count?'Edit meal schedule':'Choose meals'}</a></>}</div></section>
+  {message&&<section className="contentWidth"><div className="adminSuccess">{message}</div></section>}
+  <section className="contentWidth sectionBlock"><div className="dashboardGrid"><div className="dashboardPanel widePanel"><div className="panelHeader"><div><span className="eyebrow">Your details</span><h2>Profile & delivery</h2></div><span className="secureBadge">Saved securely</span></div><form className="formGrid" onSubmit={saveProfile}><label className="field"><span>Full name</span><input name="fullName" defaultValue={customer.full_name} required/></label><label className="field"><span>Mobile</span><input name="phone" defaultValue={customer.phone||''}/></label><label className="field"><span>Goal</span><select name="goal" defaultValue={customer.goal||'balanced'}><option value="balanced">Balanced nutrition</option><option value="fat_loss">Fat loss</option><option value="performance">Performance</option><option value="muscle_gain">Muscle gain</option></select></label><label className="field"><span>Calories</span><input name="caloriePreference" type="number" defaultValue={customer.calorie_preference||''} placeholder="e.g. 2000"/></label><label className="field full"><span>Dietary preferences</span><input name="dietaryPreferences" defaultValue={(customer.dietary_preferences||[]).join(', ')} placeholder="comma separated"/></label><label className="field full"><span>Allergies</span><input name="allergies" defaultValue={(customer.allergies||[]).join(', ')} placeholder="comma separated"/></label><label className="field full"><span>Delivery address</span><input name="deliveryAddress" defaultValue={customer.delivery_address||''} required/></label><label className="field"><span>Zone</span><input name="deliveryZone" defaultValue={customer.delivery_zone||''}/></label><label className="field"><span>Preferred slot</span><select name="deliverySlot" defaultValue={customer.delivery_slot||'evening'}><option value="morning">Morning</option><option value="afternoon">Afternoon</option><option value="evening">Evening</option></select></label>{error&&<p className="selectionError full">{error}</p>}<button className="button buttonPrimary" type="submit" disabled={saving}>{saving?'Saving…':'Save profile'}</button></form></div>
+  <aside className="dashboardPanel"><span className="eyebrow">Orders</span><h2 style={{marginTop:8}}>Your plans</h2>{orders.length===0?<><p>No package has been ordered yet.</p><a className="button buttonPrimary buttonSmall" href="/#plans">Browse plans</a></>:<div className="orderList">{orders.map(order=><div className="accountOrder" key={order.id}><strong>{order.package_name}</strong><small>{order.order_number}</small><span>QAR {Number(order.total_qar).toLocaleString()} • {order.payment_status}</span><span>{order.selection_count||0} meal units selected</span><a href={`/select?order=${encodeURIComponent(order.id)}`}>{order.selection_count?'Edit selections':'Choose meals'} →</a></div>)}</div>}</aside></div></section><SiteFooter/>
+ </main>;
 }
