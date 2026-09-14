@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function SiteHeader() {
   return (
     <>
-      <div className="announcement">Fresh meal plans built for Doha • Card payments coming via QIIB</div>
+      <div className="announcement">Nutripacks testing environment • Orders activate immediately • No payment required</div>
       <header className="siteHeader">
         <Link className="brandLockup" href="/">
           <span className="brandMark">N</span>
