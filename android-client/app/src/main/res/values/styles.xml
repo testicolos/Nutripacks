@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Nutripacks" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#102F25</item>
+        <item name="android:statusBarColor">#FFFFFF</item>
+        <item name="colorPrimary">#1E6B4B</item>
+        <item name="colorPrimaryVariant">#163F30</item>
+    </style>
+</resources>
