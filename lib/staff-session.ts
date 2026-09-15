@@ -20,6 +20,11 @@ export function friendlyStaffError(message?: string) {
   if (value.includes('mapping_item_category_mismatch')) return 'An assigned menu item does not match its meal category.';
   if (value.includes('invalid_calorie_range')) return 'Minimum calories cannot be greater than maximum calories.';
   if (value.includes('package_requires_meal')) return 'A package must include at least one meal or snack per delivery day.';
+  if (value.includes('invalid_option_name') || value.includes('option_name_exists')) return 'Give each plan version a unique name of at least two characters.';
+  if (value.includes('invalid_delivery_weekdays')) return 'The delivery weekday count must match days per week.';
+  if (value.includes('option_not_found')) return 'That customized plan version could not be found.';
   if (value.includes('invalid_package')) return 'Check the package name, slug and price.';
+  if (value.includes('invalid_plan_type') || value.includes('invalid_plan_variant')) return 'Choose a valid Diet or Gym plan type.';
+  if (value.includes('invalid_menu_category')) return 'Choose a valid menu category.';
   return 'Something went wrong. Please try again.';
 }

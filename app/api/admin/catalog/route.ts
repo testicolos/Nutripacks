@@ -19,6 +19,15 @@ export async function POST(request:NextRequest){
     if(body.action==='savePackage'){
       const {data,error}=await supabase.rpc('np_admin_save_package',{p_token:token,p_payload:body.payload});
       if(error) return NextResponse.json({error:friendlyStaffError(error.message)},{status:403});
+      if(data?.id && typeof body.payload?.allow_day_count_selection === 'boolean'){
+        const {error:visibilityError}=await supabase.rpc('np_admin_set_package_day_visibility',{p_token:token,p_package_id:data.id,p_visible:body.payload.allow_day_count_selection});
+        if(visibilityError) return NextResponse.json({error:friendlyStaffError(visibilityError.message)},{status:403});
+      }
+      return NextResponse.json(data);
+    }
+    if(body.action==='savePackageOption'){
+      const {data,error}=await supabase.rpc('np_admin_save_package_option',{p_token:token,p_payload:body.payload});
+      if(error) return NextResponse.json({error:friendlyStaffError(error.message)},{status:403});
       return NextResponse.json(data);
     }
     if(body.action==='saveMenuItem'){
@@ -27,7 +36,7 @@ export async function POST(request:NextRequest){
       return NextResponse.json(data);
     }
     if(body.action==='setMappings'){
-      const {data,error}=await supabase.rpc('np_admin_set_package_items',{p_token:token,p_package_id:body.packageId,p_mappings:body.mappings||[]});
+      const {data,error}=await supabase.rpc('np_admin_set_package_items_v2',{p_token:token,p_package_id:body.packageId,p_cycle_week:body.cycleWeek||0,p_mappings:body.mappings||[]});
       if(error) return NextResponse.json({error:friendlyStaffError(error.message)},{status:403});
       return NextResponse.json(data);
     }

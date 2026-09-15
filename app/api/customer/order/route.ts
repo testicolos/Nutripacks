@@ -12,7 +12,8 @@ export async function POST(request: NextRequest) {
       p_package_id: body.packageId,
       p_start_date: body.startDate,
       p_delivery_address: body.deliveryAddress,
-      p_delivery_slot: body.deliverySlot
+      p_delivery_slot: body.deliverySlot,
+      p_option_id: body.optionId || null
     });
     if (error || !data) return NextResponse.json({ error: friendlyAuthError(error?.message) }, { status: 400 });
     return NextResponse.json(data);

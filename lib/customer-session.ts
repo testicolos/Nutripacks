@@ -27,7 +27,10 @@ export function friendlyAuthError(message?: string) {
   if (value.includes('meal_change_day_locked')) return 'Meal changes cannot affect today or tomorrow. Changes are allowed from the day after tomorrow onward.';
   if (value.includes('past_delivery_not_editable')) return 'Past delivery dates cannot be changed.';
   if (value.includes('order_not_editable')) return 'This order can no longer be edited.';
-  if (value.includes('incorrect_delivery_day_count')) return 'Choose meals for every required delivery day in the week.';
+  if (value.includes('package_option_not_available')) return 'That customized plan version is no longer available.';
+  if (value.includes('package_option_required')) return 'Choose the number of gym delivery days before continuing.';
+  if (value.includes('incorrect_delivery_day_count')) return 'Choose meals for every required delivery day in this plan version.';
+  if (value.includes('meal_selection_locked')) return 'Meal selections are locked after confirmation and cannot be changed.';
   if (value.includes('incorrect_meal_quantities')) return 'The selected meal quantities do not match this package.';
   if (value.includes('selection_outside_package_dates')) return 'A selected delivery date is outside the package period.';
   if (value.includes('item_not_allowed_for_package')) return 'One of the selected meals is not available in this package.';

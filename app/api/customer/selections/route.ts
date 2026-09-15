@@ -27,7 +27,8 @@ export async function POST(request: NextRequest) {
       const msg = (error?.message || '').toLowerCase();
       const friendly = msg.includes('package_quantity_exceeded') ? 'You selected more meals than this package allows.' :
         msg.includes('item_not_allowed_for_package') ? 'One of the selected meals is not allowed for this package.' :
-        msg.includes('selection_date_outside_package') ? 'One of the selected dates is outside the package period.' : friendlyAuthError(error?.message);
+        msg.includes('selection_date_outside_package') ? 'One of the selected dates is outside the package period.' :
+        msg.includes('package_option_not_available') ? 'That customized plan version is no longer available.' : friendlyAuthError(error?.message);
       return NextResponse.json({ error: friendly }, { status: 400 });
     }
     return NextResponse.json(data);

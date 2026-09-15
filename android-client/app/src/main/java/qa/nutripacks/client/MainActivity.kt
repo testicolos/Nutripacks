@@ -11,18 +11,22 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ProgressBar
+import android.widget.LinearLayout
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private lateinit var progressBar: ProgressBar
     private lateinit var bottomNavigation: BottomNavigationView
+    private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var offlinePanel: LinearLayout
 
     private val host = "nutripacks-qatar.vercel.app"
     private val baseUrl = "https://$host"
-    private val startUrl = "$baseUrl/login"
+    private val startUrl = baseUrl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +35,16 @@ class MainActivity : AppCompatActivity() {
         webView = findViewById(R.id.webView)
         progressBar = findViewById(R.id.progressBar)
         bottomNavigation = findViewById(R.id.bottomNavigation)
+        swipeRefresh = findViewById(R.id.swipeRefresh)
+        offlinePanel = findViewById(R.id.offlinePanel)
 
         configureWebView()
         configureNavigation()
+        swipeRefresh.setOnRefreshListener { webView.reload() }
+        findViewById<View>(R.id.retryButton).setOnClickListener {
+            offlinePanel.visibility = View.GONE
+            webView.reload()
+        }
 
         if (savedInstanceState == null) webView.loadUrl(startUrl) else webView.restoreState(savedInstanceState)
 
@@ -74,6 +85,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         webView.webViewClient = object : WebViewClient() {
+            override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                offlinePanel.visibility = View.GONE
+            }
+
             override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
                 val uri = request.url
                 if (uri.scheme == "https" && uri.host == host && isCustomerPath(uri.path.orEmpty())) return false
@@ -87,7 +103,21 @@ class MainActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
+                swipeRefresh.isRefreshing = false
+                offlinePanel.visibility = View.GONE
                 syncNavigation(url)
+            }
+
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: android.webkit.WebResourceError?
+            ) {
+                super.onReceivedError(view, request, error)
+                if (request?.isForMainFrame == true) {
+                    swipeRefresh.isRefreshing = false
+                    offlinePanel.visibility = View.VISIBLE
+                }
             }
         }
     }
