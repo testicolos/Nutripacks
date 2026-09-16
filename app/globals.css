@@ -82,6 +82,7 @@ img { max-width: 100%; }
 
 .planGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: stretch; }
 .planCard { position: relative; padding: 28px; min-height: 460px; display: flex; flex-direction: column; background: white; border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 8px 30px rgba(21,35,28,.04); }
+.planCardImage { width: calc(100% + 30px); height: 175px; margin: -15px -15px 20px; border-radius: 18px; object-fit: cover; display: block; }
 .planCard h3 { font-size: 32px; letter-spacing: -1px; margin: 8px 0 10px; }
 .planCard > p { min-height: 66px; color: var(--muted); line-height: 1.55; }
 .planPrice { display: flex; align-items: baseline; gap: 8px; margin: 14px 0 22px; }

@@ -2,6 +2,7 @@ import { backendClient } from './customer-session';
 
 export type PackageItem = {
   id: string; name: string; slug: string; tagline?: string | null; description?: string | null;
+  image_url?: string | null;
   price_qar: number | string; duration_days: number; meals_per_day: number;
   plan_type?: 'diet' | 'gym' | string; plan_variant?: 'business_lunch' | 'standard' | 'gym' | string;
   allow_day_count_selection?: boolean;

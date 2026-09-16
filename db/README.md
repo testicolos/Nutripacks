@@ -1,6 +1,7 @@
 # Nutripacks database
 
-The current development database is PostgreSQL on Supabase. Application tables use the `np_` prefix so Nutripacks remains isolated from unrelated projects in the same development database.
+The current hosted database is PostgreSQL on Neon. Application tables use the
+`np_` prefix so Nutripacks remains isolated from unrelated application data.
 
 The production migration target is standard PostgreSQL/MySQL-compatible application logic on QHost. No business rule should depend on Vercel-specific storage.
 
@@ -21,11 +22,19 @@ For a new Neon database, apply these files in order:
 1. `20260916_neon_base_schema.sql`
 2. `20260916_neon_rpc_functions.sql`
 3. `20260916_catalog_reset_seed.sql`
+4. `20260916_expanded_catalog_seed.sql`
 
 The catalog reset seed creates the current Balanced Diet and Gym Performance
 test plans, their selectable versions, 30 Diet items, 30 Gym items, and package
 eligibility mappings. It intentionally clears existing orders and catalog rows,
 so use it only for a fresh or explicitly reset test database.
+
+The expanded catalog seed is non-destructive and can be rerun safely. It grows
+the test catalog to nine Diet, Business Lunch and Gym plans and 100 menu items,
+adds category-appropriate images to every meal, adds plan-card images, and maps
+eligible meals to every plan. On an existing database, apply the expanded seed
+and then rerun `20260916_neon_rpc_functions.sql` so the latest plan-image field
+and admin save behavior are available through the API.
 
 ## Plan-cycle migration
 

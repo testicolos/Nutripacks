@@ -302,12 +302,12 @@ begin
   if v_meals<1 then raise exception 'package_requires_meal'; end if;
   if nullif(p_payload->>'calories_min','') is not null and nullif(p_payload->>'calories_max','') is not null and (p_payload->>'calories_min')::int>(p_payload->>'calories_max')::int then raise exception 'invalid_calorie_range'; end if;
   if coalesce(p_payload->>'id','')='' then
-    insert into public.np_packages(name,slug,tagline,description,price_qar,duration_days,meals_per_day,plan_type,plan_variant,calories_min,calories_max,protein_target,active,featured,sort_order)
-    values(trim(p_payload->>'name'),v_slug,p_payload->>'tagline',p_payload->>'description',v_price,v_duration,v_meals,v_plan_type,v_variant,nullif(p_payload->>'calories_min','')::int,nullif(p_payload->>'calories_max','')::int,nullif(p_payload->>'protein_target','')::int,coalesce((p_payload->>'active')::boolean,true),coalesce((p_payload->>'featured')::boolean,false),coalesce((p_payload->>'sort_order')::int,0)) returning id into v_id;
+    insert into public.np_packages(name,slug,tagline,description,image_url,price_qar,duration_days,meals_per_day,plan_type,plan_variant,calories_min,calories_max,protein_target,active,featured,sort_order)
+    values(trim(p_payload->>'name'),v_slug,p_payload->>'tagline',p_payload->>'description',p_payload->>'image_url',v_price,v_duration,v_meals,v_plan_type,v_variant,nullif(p_payload->>'calories_min','')::int,nullif(p_payload->>'calories_max','')::int,nullif(p_payload->>'protein_target','')::int,coalesce((p_payload->>'active')::boolean,true),coalesce((p_payload->>'featured')::boolean,false),coalesce((p_payload->>'sort_order')::int,0)) returning id into v_id;
   else
     v_id:=(p_payload->>'id')::uuid;
     if not exists(select 1 from public.np_packages where id=v_id) then raise exception 'package_not_found'; end if;
-    update public.np_packages set name=trim(p_payload->>'name'),slug=v_slug,tagline=p_payload->>'tagline',description=p_payload->>'description',price_qar=v_price,duration_days=v_duration,meals_per_day=v_meals,plan_type=v_plan_type,plan_variant=v_variant,calories_min=nullif(p_payload->>'calories_min','')::int,calories_max=nullif(p_payload->>'calories_max','')::int,protein_target=nullif(p_payload->>'protein_target','')::int,active=coalesce((p_payload->>'active')::boolean,active),featured=coalesce((p_payload->>'featured')::boolean,featured),sort_order=coalesce((p_payload->>'sort_order')::int,sort_order),updated_at=now() where id=v_id;
+    update public.np_packages set name=trim(p_payload->>'name'),slug=v_slug,tagline=p_payload->>'tagline',description=p_payload->>'description',image_url=p_payload->>'image_url',price_qar=v_price,duration_days=v_duration,meals_per_day=v_meals,plan_type=v_plan_type,plan_variant=v_variant,calories_min=nullif(p_payload->>'calories_min','')::int,calories_max=nullif(p_payload->>'calories_max','')::int,protein_target=nullif(p_payload->>'protein_target','')::int,active=coalesce((p_payload->>'active')::boolean,active),featured=coalesce((p_payload->>'featured')::boolean,featured),sort_order=coalesce((p_payload->>'sort_order')::int,sort_order),updated_at=now() where id=v_id;
   end if;
   insert into public.np_package_rules(package_id,breakfast_qty,main_qty,snack_qty,days_per_week,delivery_day_count,delivery_weekdays,cycle_weeks,cycle_anchor_date,selection_days_ahead,cutoff_hours)
   values(v_id,v_breakfast,v_main,v_snack,v_days,v_delivery_days,v_weekdays,v_cycle_weeks,v_anchor,greatest(coalesce((p_payload->>'selection_days_ahead')::int,7),1),greatest(coalesce((p_payload->>'cutoff_hours')::int,24),0))
@@ -869,7 +869,7 @@ declare v_result jsonb;
 begin
   select jsonb_build_object(
     'packages', coalesce((select jsonb_agg(jsonb_build_object(
-      'id',p.id,'name',p.name,'slug',p.slug,'tagline',p.tagline,'description',p.description,
+      'id',p.id,'name',p.name,'slug',p.slug,'tagline',p.tagline,'description',p.description,'image_url',p.image_url,
       'price_qar',p.price_qar,'duration_days',p.duration_days,'meals_per_day',p.meals_per_day,
       'plan_type',p.plan_type,'plan_variant',p.plan_variant,
       'allow_day_count_selection',p.allow_day_count_selection,
@@ -979,4 +979,3 @@ end;
 $function$;
 
 commit;
-

@@ -12,6 +12,7 @@ create table if not exists public.np_packages (
   slug text not null unique,
   tagline text,
   description text,
+  image_url text,
   price_qar numeric(12,2) not null default 0,
   duration_days integer not null default 30,
   meals_per_day integer not null default 1,
