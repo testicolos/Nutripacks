@@ -4,7 +4,7 @@ const FALLBACK_URL = 'https://fqnjdnpsoxojguudyifi.supabase.co';
 const FALLBACK_KEY = 'sb_publishable_afaCCwaWxEttocVM8xFkIA_w8mZTwvS';
 
 type RpcError = { message: string };
-type RpcResponse<T = unknown> = { data: T | null; error: RpcError | null };
+type RpcResponse<T = any> = { data: T | null; error: RpcError | null };
 type RpcArgs = Record<string, unknown>;
 
 export const CUSTOMER_COOKIE = 'np_customer_session';
@@ -13,7 +13,7 @@ function createNeonDataApiClient(baseUrl: string, token?: string) {
   const url = baseUrl.replace(/\/$/, '');
 
   return {
-    async rpc<T = unknown>(name: string, args: RpcArgs = {}): Promise<RpcResponse<T>> {
+    async rpc<T = any>(name: string, args: RpcArgs = {}): Promise<RpcResponse<T>> {
       if (!/^np_[a-z0-9_]+$/i.test(name)) {
         return { data: null, error: { message: 'invalid_rpc_name' } };
       }
@@ -58,7 +58,7 @@ function createSupabaseRpcClient() {
   const supabase = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
 
   return {
-    async rpc<T = unknown>(name: string, args: RpcArgs = {}): Promise<RpcResponse<T>> {
+    async rpc<T = any>(name: string, args: RpcArgs = {}): Promise<RpcResponse<T>> {
       const { data, error } = await supabase.rpc(name, args);
       return {
         data: (data ?? null) as T | null,
