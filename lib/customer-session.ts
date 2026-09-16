@@ -3,12 +3,77 @@ import { createClient } from '@supabase/supabase-js';
 const FALLBACK_URL = 'https://fqnjdnpsoxojguudyifi.supabase.co';
 const FALLBACK_KEY = 'sb_publishable_afaCCwaWxEttocVM8xFkIA_w8mZTwvS';
 
+type RpcError = { message: string };
+type RpcResponse<T = unknown> = { data: T | null; error: RpcError | null };
+type RpcArgs = Record<string, unknown>;
+
 export const CUSTOMER_COOKIE = 'np_customer_session';
 
-export function backendClient() {
+function createNeonDataApiClient(baseUrl: string, token?: string) {
+  const url = baseUrl.replace(/\/$/, '');
+
+  return {
+    async rpc<T = unknown>(name: string, args: RpcArgs = {}): Promise<RpcResponse<T>> {
+      if (!/^np_[a-z0-9_]+$/i.test(name)) {
+        return { data: null, error: { message: 'invalid_rpc_name' } };
+      }
+
+      try {
+        const headers: Record<string, string> = {
+          'content-type': 'application/json',
+          accept: 'application/json'
+        };
+        if (token) headers.authorization = `Bearer ${token}`;
+
+        const response = await fetch(`${url}/rpc/${encodeURIComponent(name)}`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(args),
+          cache: 'no-store'
+        });
+
+        const payload = await response.json().catch(() => null);
+        if (!response.ok) {
+          const message =
+            (payload && typeof payload === 'object' && ('message' in payload || 'error' in payload)
+              ? String((payload as { message?: unknown; error?: unknown }).message || (payload as { error?: unknown }).error)
+              : response.statusText) || 'database_request_failed';
+          return { data: null, error: { message } };
+        }
+
+        return { data: payload as T, error: null };
+      } catch (error) {
+        return {
+          data: null,
+          error: { message: error instanceof Error ? error.message : 'database_request_failed' }
+        };
+      }
+    }
+  };
+}
+
+function createSupabaseRpcClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || FALLBACK_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || FALLBACK_KEY;
-  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  const supabase = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+
+  return {
+    async rpc<T = unknown>(name: string, args: RpcArgs = {}): Promise<RpcResponse<T>> {
+      const { data, error } = await supabase.rpc(name, args);
+      return {
+        data: (data ?? null) as T | null,
+        error: error ? { message: error.message } : null
+      };
+    }
+  };
+}
+
+export function backendClient() {
+  const neonDataApiUrl = process.env.NEON_DATA_API_URL;
+  if (neonDataApiUrl) {
+    return createNeonDataApiClient(neonDataApiUrl, process.env.NEON_DATA_API_TOKEN);
+  }
+  return createSupabaseRpcClient();
 }
 
 export function friendlyAuthError(message?: string) {
