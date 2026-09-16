@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { neon } from '@neondatabase/serverless';
 
 const FALLBACK_URL = 'https://fqnjdnpsoxojguudyifi.supabase.co';
 const FALLBACK_KEY = 'sb_publishable_afaCCwaWxEttocVM8xFkIA_w8mZTwvS';
@@ -8,6 +9,37 @@ type RpcResponse<T = any> = { data: T | null; error: RpcError | null };
 type RpcArgs = Record<string, unknown>;
 
 export const CUSTOMER_COOKIE = 'np_customer_session';
+
+function createNeonPostgresClient(connectionString: string) {
+  const sql = neon(connectionString);
+
+  return {
+    async rpc<T = any>(name: string, args: RpcArgs = {}): Promise<RpcResponse<T>> {
+      if (!/^np_[a-z0-9_]+$/i.test(name)) {
+        return { data: null, error: { message: 'invalid_rpc_name' } };
+      }
+
+      const entries = Object.entries(args);
+      if (entries.some(([key]) => !/^p_[a-z0-9_]+$/i.test(key))) {
+        return { data: null, error: { message: 'invalid_rpc_argument' } };
+      }
+
+      try {
+        const parameters = entries.map(([key], index) => `${key} => $${index + 1}`).join(', ');
+        const rows = await sql.query(
+          `select public.${name}(${parameters}) as result`,
+          entries.map(([, value]) => value)
+        ) as Array<{ result: T }>;
+        return { data: rows[0]?.result ?? null, error: null };
+      } catch (error) {
+        return {
+          data: null,
+          error: { message: error instanceof Error ? error.message : 'database_request_failed' }
+        };
+      }
+    }
+  };
+}
 
 function createNeonDataApiClient(baseUrl: string, token?: string) {
   const url = baseUrl.replace(/\/$/, '');
@@ -69,6 +101,10 @@ function createSupabaseRpcClient() {
 }
 
 export function backendClient() {
+  const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  if (databaseUrl) {
+    return createNeonPostgresClient(databaseUrl);
+  }
   const neonDataApiUrl = process.env.NEON_DATA_API_URL;
   if (neonDataApiUrl) {
     return createNeonDataApiClient(neonDataApiUrl, process.env.NEON_DATA_API_TOKEN);

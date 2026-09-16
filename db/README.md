@@ -14,6 +14,19 @@ Current domain areas:
 
 A clean export migration will be added before the QHost move.
 
+## Fresh Neon bootstrap
+
+For a new Neon database, apply these files in order:
+
+1. `20260916_neon_base_schema.sql`
+2. `20260916_neon_rpc_functions.sql`
+3. `20260916_catalog_reset_seed.sql`
+
+The catalog reset seed creates the current Balanced Diet and Gym Performance
+test plans, their selectable versions, 30 Diet items, 30 Gym items, and package
+eligibility mappings. It intentionally clears existing orders and catalog rows,
+so use it only for a fresh or explicitly reset test database.
+
 ## Plan-cycle migration
 
 `20260915_plan_cycles.sql` extends the live schema with Diet/Gym plan metadata,
