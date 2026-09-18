@@ -6,6 +6,7 @@ import './step6.css';
 import './revamp.css';
 import './mockup-match.css';
 import './final-reference.css';
+import './natural-decor.css';
 
 export const metadata: Metadata = {
   title: 'Nutri Packs Qatar',
