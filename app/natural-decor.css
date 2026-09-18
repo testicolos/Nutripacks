@@ -1,0 +1,102 @@
+/* Final polish for the approved preview: visible header logo and real food decorations. */
+.referenceBrand,
+.siteHeader .brandLockup {
+  justify-self: start;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.referenceBrand .brandLogoFrame,
+.siteHeader .brandLogoFrame {
+  width: 188px !important;
+  height: 82px !important;
+  flex-basis: 188px !important;
+  display: grid !important;
+  place-items: center !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible !important;
+}
+
+.brandLogoSvg {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  overflow: visible !important;
+  filter: none !important;
+}
+
+/* Real basil leaf cutout, sampled from the approved artwork. */
+.finalLeaf,
+.decorLeaf,
+.npLeaf {
+  width: 78px !important;
+  height: 55px !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  background-image: url("data:image/webp;base64,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") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 8px 9px rgba(32, 74, 43, .16));
+}
+
+.finalLeaf::after,
+.decorLeaf::after,
+.npLeaf::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Real tomato cutout, sampled from the approved artwork. */
+.finalTomato,
+.decorTomato,
+.npTomato {
+  width: 52px !important;
+  height: 72px !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  background-image: url("data:image/webp;base64,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") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: contain !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 9px 9px rgba(165, 50, 38, .18));
+}
+
+.heroTomatoTwo {
+  width: 37px !important;
+  height: 52px !important;
+}
+
+.heroLeafTwo,
+.plateLeafTwo {
+  width: 61px !important;
+  height: 43px !important;
+}
+
+@media (max-width: 820px) {
+  .referenceBrand .brandLogoFrame,
+  .siteHeader .brandLogoFrame {
+    width: 142px !important;
+    height: 66px !important;
+    flex-basis: 142px !important;
+  }
+
+  .finalLeaf,
+  .decorLeaf,
+  .npLeaf {
+    width: 61px !important;
+    height: 43px !important;
+  }
+
+  .finalTomato,
+  .decorTomato,
+  .npTomato {
+    width: 41px !important;
+    height: 57px !important;
+  }
+}

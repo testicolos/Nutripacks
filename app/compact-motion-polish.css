@@ -1,0 +1,302 @@
+/* Final compact spacing, real produce and motion polish. Loaded last. */
+
+/* Tighter homepage rhythm to match the approved reference layout. */
+.finalHow,
+.finalPlans,
+.finalMeals,
+.finalCommunity {
+  padding-top: 58px !important;
+  padding-bottom: 62px !important;
+}
+
+.finalSectionHeading {
+  margin-bottom: 26px !important;
+}
+
+.finalBenefits .finalBenefitGrid {
+  min-height: 94px !important;
+}
+
+.finalStepGrid,
+.finalPlanGrid,
+.finalMealGrid,
+.finalCommunityGrid {
+  gap: 18px !important;
+}
+
+.finalBottomCta {
+  padding-top: 24px !important;
+  padding-bottom: 34px !important;
+}
+
+.siteFooter {
+  padding-top: 42px !important;
+}
+
+/* Keep customer subpages compact as well. */
+.sectionBlock {
+  padding-top: 68px !important;
+  padding-bottom: 68px !important;
+}
+
+.compactHero {
+  padding-top: 70px !important;
+  padding-bottom: 48px !important;
+}
+
+/* Replace the artificial red shapes with an actual photographed tomato. */
+.finalTomato,
+.decorTomato,
+.npTomato {
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 50% !important;
+  clip-path: circle(48% at 50% 50%);
+  background-color: transparent !important;
+  background-image: url("https://images.unsplash.com/photo-1699027833680-6bae97820931?auto=format&fit=crop&w=360&h=360&q=90") !important;
+  background-repeat: no-repeat !important;
+  background-position: center 51% !important;
+  background-size: 148% !important;
+  box-shadow: none !important;
+  filter: drop-shadow(0 9px 10px rgba(129, 39, 28, .20)) saturate(1.06);
+  mix-blend-mode: multiply;
+  animation: realTomatoFloat 7.6s ease-in-out infinite !important;
+  will-change: translate, rotate;
+}
+
+.heroTomatoTwo {
+  width: 39px !important;
+  height: 39px !important;
+  background-size: 155% !important;
+  animation-delay: -2.4s !important;
+}
+
+/* Organic basil movement rather than static decorative shapes. */
+.finalLeaf,
+.decorLeaf,
+.npLeaf {
+  animation: realBasilSway 8.4s ease-in-out infinite !important;
+  transform-origin: 50% 80%;
+  will-change: translate, rotate;
+}
+
+.heroLeafTwo,
+.howLeafTwo,
+.planLeafTwo,
+.plateLeafTwo {
+  animation-delay: -3.1s !important;
+}
+
+/* Interactive hero parallax is driven by CSS variables from MotionEnhancer. */
+.finalHeroVisual {
+  translate: var(--hero-shift-x, 0px) var(--hero-shift-y, 0px);
+  transition: translate .28s cubic-bezier(.2,.7,.2,1);
+  will-change: translate;
+}
+
+.finalPlate {
+  animation: plateBreath 7.5s ease-in-out infinite !important;
+}
+
+.finalSeal {
+  animation: sealDrift 6.4s ease-in-out infinite !important;
+}
+
+.finalSideDish {
+  animation: sideDishOrbit 8s ease-in-out infinite;
+}
+
+/* More life in benefits, plans and meals. */
+.finalBenefitGrid article {
+  transition: transform .3s ease, background-color .3s ease;
+}
+
+.finalBenefitGrid article:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 249, 243, .82);
+}
+
+.finalBenefitGrid article > span {
+  animation: iconPulse 4.8s ease-in-out infinite;
+}
+
+.finalBenefitGrid article:nth-child(2) > span { animation-delay: -.9s; }
+.finalBenefitGrid article:nth-child(3) > span { animation-delay: -1.8s; }
+.finalBenefitGrid article:nth-child(4) > span { animation-delay: -2.7s; }
+
+.finalPlanCard,
+.finalMealCard,
+.finalStepGrid article,
+.finalCommunityGrid article {
+  transform-style: preserve-3d;
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease, border-color .35s ease;
+}
+
+.finalPlanCard:hover,
+.finalMealCard:hover,
+.finalStepGrid article:hover,
+.finalCommunityGrid article:hover {
+  transform: translateY(-9px) rotateX(1.2deg);
+}
+
+.finalPlanIcon {
+  animation: planIconFloat 5.5s ease-in-out infinite;
+}
+
+.finalPlanCard:nth-child(2n) .finalPlanIcon { animation-delay: -1.8s; }
+.finalPlanCard:nth-child(3n) .finalPlanIcon { animation-delay: -3.2s; }
+
+.finalMealImage img {
+  transition: transform .7s cubic-bezier(.2,.8,.2,1), filter .35s ease !important;
+}
+
+.finalMealCard:hover .finalMealImage img {
+  transform: scale(1.085) rotate(.6deg) !important;
+  filter: saturate(1.12) contrast(1.03);
+}
+
+.finalMealTitle > span {
+  display: inline-block;
+  transition: transform .25s ease, color .25s ease;
+}
+
+.finalMealCard:hover .finalMealTitle > span {
+  transform: scale(1.22) rotate(-8deg);
+  color: #d13b31;
+}
+
+/* Qatar-based testimonial portraits. */
+.finalCommunityGrid article img {
+  width: 68px !important;
+  height: 68px !important;
+  object-fit: cover !important;
+  border-radius: 50% !important;
+  border: 3px solid rgba(255,255,255,.92);
+  box-shadow: 0 8px 20px rgba(24, 75, 67, .16);
+  transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s ease;
+}
+
+.finalCommunityGrid article:nth-child(1) img { object-position: 50% 25%; }
+.finalCommunityGrid article:nth-child(2) img { object-position: 50% 30%; }
+.finalCommunityGrid article:nth-child(3) img { object-position: 50% 24%; }
+
+.finalCommunityGrid article:hover img {
+  transform: scale(1.08) rotate(-2deg);
+  box-shadow: 0 13px 26px rgba(24, 75, 67, .22);
+}
+
+/* Moving highlight on the final conversion banner. */
+.finalCtaPanel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.finalCtaPanel::after {
+  content: "";
+  position: absolute;
+  inset: -40% auto -40% -32%;
+  z-index: -1;
+  width: 26%;
+  transform: skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.11), transparent);
+  animation: ctaLightSweep 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.finalCtaBenefits svg {
+  animation: ctaIconBreathe 4.5s ease-in-out infinite;
+}
+.finalCtaBenefits span:nth-child(2) svg { animation-delay: -1.3s; }
+.finalCtaBenefits span:nth-child(3) svg { animation-delay: -2.6s; }
+
+@keyframes realTomatoFloat {
+  0%, 100% { translate: 0 0; rotate: -4deg; }
+  35% { translate: 4px -10px; rotate: 3deg; }
+  68% { translate: -3px -5px; rotate: -1deg; }
+}
+
+@keyframes realBasilSway {
+  0%, 100% { translate: 0 0; rotate: -2deg; }
+  50% { translate: 5px -11px; rotate: 5deg; }
+}
+
+@keyframes plateBreath {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  50% { transform: translateY(-10px) rotate(.7deg) scale(1.012); }
+}
+
+@keyframes sealDrift {
+  0%, 100% { transform: translateY(0) rotate(7deg); }
+  50% { transform: translateY(-9px) rotate(3deg); }
+}
+
+@keyframes sideDishOrbit {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  50% { translate: -5px -8px; rotate: 3deg; }
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.035); }
+}
+
+@keyframes planIconFloat {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-5px) rotate(3deg); }
+}
+
+@keyframes ctaLightSweep {
+  0%, 18% { left: -32%; opacity: 0; }
+  30% { opacity: 1; }
+  55%, 100% { left: 118%; opacity: 0; }
+}
+
+@keyframes ctaIconBreathe {
+  0%, 100% { transform: translateY(0) scale(1); opacity: .9; }
+  50% { transform: translateY(-4px) scale(1.08); opacity: 1; }
+}
+
+@media (max-width: 820px) {
+  .finalHow,
+  .finalPlans,
+  .finalMeals,
+  .finalCommunity {
+    padding-top: 46px !important;
+    padding-bottom: 50px !important;
+  }
+
+  .sectionBlock {
+    padding-top: 52px !important;
+    padding-bottom: 52px !important;
+  }
+
+  .finalTomato,
+  .decorTomato,
+  .npTomato {
+    width: 46px !important;
+    height: 46px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finalTomato,
+  .decorTomato,
+  .npTomato,
+  .finalLeaf,
+  .decorLeaf,
+  .npLeaf,
+  .finalPlate,
+  .finalSeal,
+  .finalSideDish,
+  .finalBenefitGrid article > span,
+  .finalPlanIcon,
+  .finalCtaPanel::after,
+  .finalCtaBenefits svg {
+    animation: none !important;
+  }
+
+  .finalHeroVisual {
+    translate: 0 0 !important;
+  }
+}

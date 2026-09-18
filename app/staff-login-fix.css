@@ -1,0 +1,206 @@
+/* Dedicated staff-login layout. Loaded last to isolate it from shared brand/header rules. */
+.staffLoginPage {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 48px 22px;
+  background:
+    radial-gradient(circle at 15% 18%, rgba(10, 95, 85, .09), transparent 24rem),
+    radial-gradient(circle at 86% 14%, rgba(201, 54, 44, .07), transparent 22rem),
+    linear-gradient(145deg, #fffaf4, #f8f6f0);
+}
+
+.staffLoginPage .staffLoginCard {
+  width: min(640px, 100%);
+  margin: 0;
+  padding: 42px 46px 38px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border: 1px solid rgba(8, 76, 68, .11);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, .96);
+  box-shadow: 0 30px 80px rgba(34, 67, 59, .14);
+  overflow: hidden;
+}
+
+.staffLoginLogoLink {
+  align-self: center;
+  width: 210px;
+  height: 134px;
+  display: grid;
+  place-items: center;
+  margin: 0 0 12px;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.staffLoginLogoLink > .brandLogoFrame {
+  width: 210px !important;
+  height: 134px !important;
+  min-width: 210px !important;
+  flex: 0 0 210px !important;
+  display: grid !important;
+  place-items: center !important;
+  overflow: hidden !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.staffLoginLogoLink .brandLogoImageAsset,
+.staffLoginLogoLink img,
+.staffLoginLogoLink svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  background: transparent !important;
+}
+
+.staffLoginIntro {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.staffPortalBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 5px 12px;
+  margin-bottom: 15px;
+  border-radius: 999px;
+  color: #0a6258;
+  background: #eaf5f1;
+  border: 1px solid rgba(10, 95, 85, .12);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+}
+
+.staffLoginIntro .eyebrow {
+  margin-bottom: 8px;
+  color: #75847f;
+  font-size: 11px;
+  letter-spacing: 1.7px;
+}
+
+.staffLoginPage .staffLoginCard h1 {
+  max-width: 500px;
+  margin: 0;
+  color: #073f39;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+  font-size: clamp(38px, 4.6vw, 50px);
+  line-height: 1.02;
+  letter-spacing: -1.6px;
+  text-align: center;
+}
+
+.staffLoginIntro > p {
+  max-width: 500px;
+  margin: 16px 0 0;
+  color: #687974;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.staffLoginForm {
+  display: grid;
+  gap: 18px;
+}
+
+.staffLoginPage .field {
+  gap: 8px;
+}
+
+.staffLoginPage .field > span {
+  color: #173f39;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.staffLoginPage .field input {
+  width: 100%;
+  height: 58px;
+  padding: 0 17px;
+  border: 1px solid #dedbd4;
+  border-radius: 15px;
+  background: #fffefb;
+  color: #183e39;
+  font-size: 16px;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.staffLoginPage .field input:focus {
+  border-color: rgba(8, 95, 84, .68);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(8, 95, 84, .08);
+}
+
+.staffLoginButton {
+  width: 100%;
+  min-height: 56px !important;
+  margin-top: 2px;
+  font-size: 16px !important;
+}
+
+.staffLoginPage .selectionError {
+  margin: -3px 0 0;
+  padding: 11px 13px;
+  border-radius: 11px;
+  color: #a52d28;
+  background: #fff0ed;
+  border: 1px solid rgba(201, 54, 44, .14);
+  font-size: 13px;
+}
+
+.staffLoginPage .staffBackLink {
+  align-self: center;
+  margin-top: 24px;
+  color: #08665b;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.staffLoginPage .staffBackLink:hover {
+  color: #c9362c;
+}
+
+@media (max-width: 640px) {
+  .staffLoginPage {
+    padding: 24px 14px;
+  }
+
+  .staffLoginPage .staffLoginCard {
+    padding: 31px 22px 28px;
+    border-radius: 22px;
+  }
+
+  .staffLoginLogoLink,
+  .staffLoginLogoLink > .brandLogoFrame {
+    width: 170px !important;
+    min-width: 170px !important;
+    flex-basis: 170px !important;
+    height: 108px !important;
+  }
+
+  .staffLoginPage .staffLoginCard h1 {
+    font-size: 37px;
+  }
+
+  .staffLoginIntro > p {
+    font-size: 14px;
+  }
+}
