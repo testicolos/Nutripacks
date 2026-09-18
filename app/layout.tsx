@@ -9,6 +9,7 @@ import './final-reference.css';
 import './natural-decor.css';
 import './commercial-cleanup.css';
 import './compact-motion-polish.css';
+import './staff-login-fix.css';
 
 export const metadata: Metadata = {
   title: 'Nutri Packs Qatar',
