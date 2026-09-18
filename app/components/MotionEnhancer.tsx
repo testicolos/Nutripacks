@@ -7,18 +7,18 @@ export default function MotionEnhancer() {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const selectors = [
       '[data-reveal]',
-      '.sectionBlock',
       '.pageHero > .contentWidth',
       '.planDetailHero',
-      '.onboardingWrap',
-      '.checkoutWrap',
+      '.onboardingIntro',
+      '.checkoutMain > h1',
       '.accountHero',
       '.staffHero',
       '.staffStats > div',
       '.staffPanel',
       '.formCard',
       '.dashboardPanel',
-      '.adminMain > .card'
+      '.adminMain > .card',
+      '.menuPageGrid .mealCard'
     ].join(',');
 
     const targets = Array.from(document.querySelectorAll<HTMLElement>(selectors));
@@ -26,7 +26,7 @@ export default function MotionEnhancer() {
 
     unique.forEach((el, index) => {
       el.classList.add('reveal-ready');
-      el.style.setProperty('--reveal-delay', `${Math.min((index % 4) * 70, 210)}ms`);
+      el.style.setProperty('--reveal-delay', `${Math.min((index % 4) * 55, 165)}ms`);
     });
 
     if (reduced || !('IntersectionObserver' in window)) {
@@ -42,7 +42,7 @@ export default function MotionEnhancer() {
           observer.unobserve(entry.target);
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -5% 0px' }
+      { threshold: 0.02, rootMargin: '0px 0px -3% 0px' }
     );
 
     unique.forEach(el => observer.observe(el));
