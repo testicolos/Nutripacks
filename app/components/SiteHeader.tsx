@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import BrandLogo from './BrandLogo';
 import { signOutCustomer, useCustomerAuth } from './useCustomerAuth';
 
 export default function SiteHeader() {
@@ -16,7 +17,7 @@ export default function SiteHeader() {
       <div className="announcement">Nutripacks testing environment • Orders activate immediately • No payment required</div>
       <header className="siteHeader">
         <Link className="brandLockup" href="/">
-          <span className="brandMark">N</span>
+          <BrandLogo/>
           <span>
             <strong>Nutripacks</strong>
             <small>smart nutrition, delivered</small>

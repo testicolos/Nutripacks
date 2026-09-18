@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import BrandLogo from './BrandLogo';
 import { signOutCustomer, useCustomerAuth } from './useCustomerAuth';
 
 export default function SiteFooter() {
@@ -16,7 +17,7 @@ export default function SiteFooter() {
       <div className="footerGrid">
         <div className="footerBrand">
           <Link className="brandLockup footerLockup" href="/">
-            <span className="brandMark">N</span>
+            <BrandLogo/>
             <span><strong>Nutripacks</strong><small>smart nutrition, delivered</small></span>
           </Link>
           <p>Balanced meal plans with clear macros, flexible choices and simple delivery management.</p>
@@ -61,7 +62,7 @@ export default function SiteFooter() {
           padding: 0;
           border: 0;
           background: transparent;
-          color: #b5cabf;
+          color: #cfe3df;
           font: inherit;
           text-align: left;
           cursor: pointer;
