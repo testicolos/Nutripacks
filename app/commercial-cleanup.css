@@ -46,3 +46,5 @@
     display: flex;
   }
 }
+
+/* This file is intentionally loaded last so no earlier theme layer can restore removed controls. */
