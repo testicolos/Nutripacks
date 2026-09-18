@@ -13,26 +13,28 @@ export default function SiteFooter() {
   }
 
   return (
-    <footer className="siteFooter">
+    <footer className="siteFooter" id="contact">
       <div className="footerGrid">
         <div className="footerBrand">
           <Link className="brandLockup footerLockup" href="/">
             <BrandLogo/>
-            <span><strong>Nutripacks</strong><small>smart nutrition, delivered</small></span>
+            <span><strong>Nutri Packs</strong><small>fresh meals • brighter days</small></span>
           </Link>
-          <p>Fresh meals, clear nutrition and flexible delivery planning for a healthier routine.</p>
+          <p>Healthy meals, happier routines and a simpler way to plan nutrition in Qatar.</p>
+          <strong className="footerTagline">Good Food.<br/>Brighter Days ♡</strong>
         </div>
 
         <div>
-          <h4>Explore</h4>
-          <Link href="/#plans">Meal plans</Link>
+          <h4>Quick Links</h4>
+          <Link href="/#top">Home</Link>
+          <Link href="/#plans">Our Plans</Link>
           <Link href="/menu">Menu</Link>
-          <Link href="/#how">How it works</Link>
+          <Link href="/#about">About Us</Link>
+          <Link href="/#how">How It Works</Link>
         </div>
 
         <div>
-          <h4>Support</h4>
-          <Link href="/#faq">FAQ</Link>
+          <h4>Contact Us</h4>
           <a href="mailto:support@nutripacks.qa">support@nutripacks.qa</a>
           <span>Doha, Qatar</span>
           <Link href="/staff/login">Staff portal</Link>
@@ -52,24 +54,9 @@ export default function SiteFooter() {
       </div>
 
       <div className="footerBottom">
-        <span>© 2026 Nutripacks. All rights reserved.</span>
-        <span>Built for Qatar • QIIB card gateway integration pending</span>
+        <span>© 2026 Nutri Packs. All rights reserved.</span>
+        <span>Made for healthier routines in Qatar ♥</span>
       </div>
-
-      <style jsx>{`
-        .footerLinkButton {
-          width: fit-content;
-          padding: 0;
-          border: 0;
-          background: transparent;
-          color: #5b716c;
-          font: inherit;
-          text-align: left;
-          cursor: pointer;
-          transition: color .18s ease;
-        }
-        .footerLinkButton:hover { color: #a92f2b; }
-      `}</style>
     </footer>
   );
 }
