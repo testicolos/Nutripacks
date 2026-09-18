@@ -16,9 +16,11 @@ export default function SiteFooter() {
     <footer className="siteFooter" id="contact">
       <div className="footerGrid">
         <div className="footerBrand">
-          <Link className="brandLockup footerLockup" href="/">
-            <BrandLogo/>
-            <span><strong>Nutri Packs</strong><small>fresh meals • brighter days</small></span>
+          <Link className="brandLockup footerLockup" href="/" aria-label="Nutri Packs home">
+            <div className="brandLogoHost" aria-hidden="true">
+              <BrandLogo/>
+            </div>
+            <span className="footerBrandText"><strong>Nutri Packs</strong><small>fresh meals • brighter days</small></span>
           </Link>
           <p>Healthy meals, happier routines and a simpler way to plan nutrition in Qatar.</p>
           <strong className="footerTagline">Good Food.<br/>Brighter Days ♡</strong>
