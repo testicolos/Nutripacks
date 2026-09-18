@@ -19,7 +19,9 @@ export default function SiteHeader() {
   return (
     <header className="siteHeader referenceHeader">
       <Link className="brandLockup referenceBrand" href="/#top" aria-label="Nutri Packs home">
-        <BrandLogo />
+        <div className="brandLogoHost" aria-hidden="true">
+          <BrandLogo />
+        </div>
       </Link>
 
       <nav className="siteNav referenceNav" aria-label="Main navigation">
