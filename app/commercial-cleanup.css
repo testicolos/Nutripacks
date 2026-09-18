@@ -1,0 +1,48 @@
+/* Remove payment, cart, language-switch and test-environment presentation. */
+.languageHint,
+.headerBag {
+  display: none !important;
+}
+
+.siteHeader,
+.referenceHeader {
+  grid-template-columns: 210px minmax(420px, 1fr) auto;
+}
+
+.referenceBrand,
+.siteHeader .brandLockup {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-self: start !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.referenceHeaderActions,
+.headerActions {
+  justify-content: flex-end;
+}
+
+/* The customer-account banner only described the previous test/payment state. */
+.accountHero + section.contentWidth {
+  display: none !important;
+}
+
+/* The admin catalog hero card only described the previous test/payment state. */
+.staffPortal .staffHero > .accountPlanCard {
+  display: none !important;
+}
+
+@media (max-width: 1120px) {
+  .siteHeader,
+  .referenceHeader {
+    grid-template-columns: 180px minmax(340px, 1fr) auto;
+  }
+}
+
+@media (max-width: 820px) {
+  .siteHeader,
+  .referenceHeader {
+    display: flex;
+  }
+}
