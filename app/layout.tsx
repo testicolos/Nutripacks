@@ -5,9 +5,10 @@ import './step5.css';
 import './step6.css';
 import './revamp.css';
 import './mockup-match.css';
+import './final-reference.css';
 
 export const metadata: Metadata = {
-  title: 'Nutripacks Qatar',
+  title: 'Nutri Packs Qatar',
   description: 'Fresh, chef-prepared meal plans with clear nutrition and flexible delivery scheduling in Qatar.'
 };
 
