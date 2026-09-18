@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import BrandLogo from '../../components/BrandLogo';
 
 export default function StaffLoginPage(){
   const router=useRouter();
@@ -15,5 +16,5 @@ export default function StaffLoginPage(){
     if(!response.ok){setError(data.error||'Unable to sign in.');return;}
     router.push(data.role==='admin'?'/admin':'/staff'); router.refresh();
   }
-  return <main className="staffLoginShell"><div className="staffLoginCard"><a className="brandLockup staffBrand" href="/"><span className="brandMark">N</span><span><strong>Nutripacks</strong><small>operations portal</small></span></a><span className="eyebrow">Staff access</span><h1>Chef, sales & admin sign in.</h1><p>Use your assigned Nutripacks staff account. Customer accounts cannot sign in here.</p><form className="formGrid" onSubmit={submit}><label className="field full"><span>Username</span><input name="username" autoComplete="username" required/></label><label className="field full"><span>Password</span><input name="password" type="password" autoComplete="current-password" required/></label>{error&&<p className="selectionError full">{error}</p>}<button className="button buttonPrimary fullButton" disabled={loading}>{loading?'Signing in…':'Sign in to operations'}</button></form><a className="staffBackLink" href="/">← Back to customer website</a></div></main>;
+  return <main className="staffLoginShell"><div className="staffLoginCard"><a className="brandLockup staffBrand" href="/"><BrandLogo/><span><strong>Nutripacks</strong><small>operations portal</small></span></a><span className="eyebrow">Staff access</span><h1>Chef, sales & admin sign in.</h1><p>Use your assigned Nutripacks staff account. Customer accounts cannot sign in here.</p><form className="formGrid" onSubmit={submit}><label className="field full"><span>Username</span><input name="username" autoComplete="username" required/></label><label className="field full"><span>Password</span><input name="password" type="password" autoComplete="current-password" required/></label>{error&&<p className="selectionError full">{error}</p>}<button className="button buttonPrimary fullButton" disabled={loading}>{loading?'Signing in…':'Sign in to operations'}</button></form><a className="staffBackLink" href="/">← Back to customer website</a></div></main>;
 }

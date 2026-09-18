@@ -20,7 +20,7 @@ export default function SiteFooter() {
             <BrandLogo/>
             <span><strong>Nutripacks</strong><small>smart nutrition, delivered</small></span>
           </Link>
-          <p>Balanced meal plans with clear macros, flexible choices and simple delivery management.</p>
+          <p>Fresh meals, clear nutrition and flexible delivery planning for a healthier routine.</p>
         </div>
 
         <div>
@@ -62,13 +62,13 @@ export default function SiteFooter() {
           padding: 0;
           border: 0;
           background: transparent;
-          color: #cfe3df;
+          color: #5b716c;
           font: inherit;
           text-align: left;
           cursor: pointer;
           transition: color .18s ease;
         }
-        .footerLinkButton:hover { color: white; }
+        .footerLinkButton:hover { color: #a92f2b; }
       `}</style>
     </footer>
   );
