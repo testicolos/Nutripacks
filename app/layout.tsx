@@ -4,6 +4,7 @@ import './globals.css';
 import './step5.css';
 import './step6.css';
 import './revamp.css';
+import './mockup-match.css';
 
 export const metadata: Metadata = {
   title: 'Nutripacks Qatar',
